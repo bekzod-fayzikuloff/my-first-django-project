@@ -1,0 +1,57 @@
+from django.db import models
+from django.utils import timezone
+from django.contrib.auth.models import User
+from django.urls import reverse
+from taggit.managers import TaggableManager
+
+# Create your models here.
+
+class PublishedManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status='published')
+
+class Post(models.Model):
+    STATUS_CHOICES = (
+        ('draft', 'Draft'),
+        ('published', 'Published'),
+    )
+    title = models.CharField('Название статьи', max_length=250)
+    slug = models.SlugField('Слаг', max_length=250, unique_for_date='publish')
+    author = models.ForeignKey(User, on_delete=models.CASCADE,
+                               related_name='blog_post')
+    body = models.TextField()
+    url = models.URLField(max_length=255, null=True)
+    image = models.ImageField(verbose_name='Изображение', upload_to='images/')
+    publish = models.DateTimeField('Опубликован', default=timezone.now)
+    created = models.DateTimeField('Создан', auto_now_add=True)
+    updated = models.DateTimeField('Обнавлен', auto_now=True)
+    status = models.CharField('Статус', max_length=10,choices=STATUS_CHOICES,default='draft')
+    objects = models.Manager()
+    published = PublishedManager()
+    tags = TaggableManager()
+
+    def get_absolute_url(self):
+        return reverse('blog:post_detail', args=[self.publish.year,
+                       self.publish.month, self.publish.day, self.slug])
+
+    class Meta:
+        ordering = ('-publish',)
+
+    def __str__(self):
+        return self.title
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    name = models.CharField(max_length=80)
+    email = models.EmailField()
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ('created',)
+
+    def __str__(self):
+        return 'Comment by {} on {}'.format(self.name, self.post)

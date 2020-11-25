@@ -1,0 +1,43 @@
+{% extends "blog/base.html" %}
+{% load blog_tags %}
+{% load static %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block header %}
+
+{% if post.image %}
+    <header class="masthead" style="background-image: url({{ post.image.url }})">
+{% else %}
+    <header class="masthead" style="background-image: url({% static "images/broly.jpg" %})">
+{% endif %}
+
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading">
+            <h1><a id="header-title" href="http://127.0.0.1:8000">MyBlog</a></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <p>{{ post.body }}</p>
+
+          {% if post.image %}
+            <img class="detail_img" src="{{post.image.url}}" />
+          {% endif %}
+
+          <hr>
+      </div>
+    </div>
+</div>
+
+{% endblock %}

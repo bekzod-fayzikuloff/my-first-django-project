@@ -1,0 +1,29 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block title %} Contact {% endblock %}
+
+{% block header %}
+<header class="masthead" style="background-image: url({% static "images/broly.jpg" %})">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading">
+            <h1><a id="header-title" href="http://127.0.0.1:8000">MyBlog</a></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <h1>Contact</h1>
+      </div>
+    </div>
+</div>
+{% endblock %}
