@@ -57,16 +57,13 @@ def post_detail(request, year, month, day, post):
                              publish__month=month, publish__day=day)
     comments = post.comments.filter(active=True)
     new_comment = None
-    comments_form = None
-
+    comment_form = None
     if request.method == 'POST':
-        comments_form = CommentForm(data=request.POST)
-
-        if comments_form.is_valid():
-            new_comment = comments_form.save(commit=False)
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
             new_comment.post = post
             new_comment.save()
-
         else:
             comment_form = CommentForm()
     post_tags_ids = post.tags.values_list('id', flat=True)
@@ -78,7 +75,7 @@ def post_detail(request, year, month, day, post):
     return render(request, 'blog/post/detail.html', {'post': post,
                                                     'comments': comments,
                                                     'new_comment': new_comment,
-                                                    'comment_form': comments_form,
+                                                    'comment_form': comment_form,
                                                     'similar_posts': similar_posts},
                   )
 

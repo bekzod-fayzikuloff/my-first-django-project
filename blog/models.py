@@ -6,9 +6,11 @@ from taggit.managers import TaggableManager
 
 # Create your models here.
 
+
 class PublishedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status='published')
+
 
 class Post(models.Model):
     STATUS_CHOICES = (
@@ -20,8 +22,8 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE,
                                related_name='blog_post')
     body = models.TextField()
-    url = models.URLField(max_length=255, null=True)
-    image = models.ImageField(verbose_name='Изображение', upload_to='images/')
+    vid_link = models.CharField('Ссылка на видос', max_length=120, null=True)
+    image = models.ImageField(verbose_name='Изображение', upload_to='images/', null=True)
     publish = models.DateTimeField('Опубликован', default=timezone.now)
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Обнавлен', auto_now=True)

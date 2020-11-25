@@ -34,8 +34,47 @@
           {% if post.image %}
             <img class="detail_img" src="{{post.image.url}}" />
           {% endif %}
+          {% if post.vid_link %}
+            <iframe width="720" height="480" src="https://www.youtube.com/embed/{{ post.vid_link }}" frameborder="0" allowfullscreen></iframe>
+          {% endif %}
+
+
 
           <hr>
+          {% with comments.count as total_comments %}
+            <h2>{{ total_comments }} comment{{ total_comments|pluralize }}</h2>
+          {% endwith %}
+
+          {% for comment in comments %}
+            <div class="comment">
+                <p class="info">
+                    Comment {{ forloop.counter }} by {{ comment.name }}
+                    {{ comment.created }}
+                </p>
+                    {{ comment.body|linebreaks }}
+            </div>
+                {% empty %}
+                <p>There are no comments yet.</p>
+          {% endfor %}
+
+          {% if new_comment %}
+                <h2>Your comment has been added.</h2>
+                 <h2>Add a new comment</h2>
+                <form action="." method="post">
+                    {{ comment_form.as_p }}
+                    {% csrf_token %}
+                    <p><input type="submit" value="Add comment"></p>
+                </form>
+          {% else %}
+                <h2>Add a new comment</h2>
+                <form action="." method="post">
+                    {{ comment_form.as_p }}
+                    {% csrf_token %}
+                    <p><input type="submit" value="Add comment"></p>
+                </form>
+          {% endif %}
+
+
       </div>
     </div>
 </div>
